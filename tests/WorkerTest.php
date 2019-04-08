@@ -10,7 +10,9 @@ namespace Carno\Channel\Tests;
 
 use Carno\Channel\Channel;
 use Carno\Channel\Worker;
+use Exception;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 class WorkerTest extends TestCase
 {
@@ -41,7 +43,7 @@ class WorkerTest extends TestCase
         $chan = new Channel(32);
 
         $worker = new Worker($chan, function () {
-            throw new \Exception('test');
+            throw new Exception('test1');
         });
 
         for ($i = 0; $i < 100; $i ++) {
@@ -49,5 +51,23 @@ class WorkerTest extends TestCase
         }
 
         $this->assertEquals(1, $worker->activated());
+    }
+
+    public function testFailure()
+    {
+        $chan = new Channel;
+
+        $em = null;
+        new Worker($chan, function (string $em) {
+            throw new Exception($em);
+        }, function (Throwable $e) use (&$em) {
+            $em = $e->getMessage();
+        });
+
+        $chan->send('test1');
+        $this->assertEquals('test1', $em);
+
+        $chan->send('test2');
+        $this->assertEquals('test2', $em);
     }
 }

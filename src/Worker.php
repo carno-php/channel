@@ -11,6 +11,7 @@ namespace Carno\Channel;
 use function Carno\Coroutine\async;
 use Carno\Coroutine\Context;
 use Closure;
+use Throwable;
 
 class Worker
 {
@@ -23,6 +24,11 @@ class Worker
      * @var Closure
      */
     private $program = null;
+
+    /**
+     * @var Closure
+     */
+    private $failure = null;
 
     /**
      * @var Closure
@@ -53,18 +59,25 @@ class Worker
      * Worker constructor.
      * @param Chan $chan
      * @param Closure $program
+     * @param Closure $failure
      */
-    public function __construct(Chan $chan, Closure $program)
+    public function __construct(Chan $chan, Closure $program, Closure $failure = null)
     {
         $this->chan = $chan;
         $this->program = $program;
+        $this->failure = $failure;
 
         $this->processor = function ($data, Context $ctx = null) {
             async($this->program, $ctx ?? new Context, $data)->then($this->done, $this->done);
         };
 
-        $this->done = function () {
+        $this->done = function ($e = null) {
             $this->running --;
+
+            if ($this->failure && $e instanceof Throwable) {
+                ($this->failure)($e);
+            }
+
             $this->execute();
         };
 
