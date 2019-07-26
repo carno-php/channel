@@ -15,18 +15,18 @@ class ChannelTest extends TestCase
 {
     public function testSR1()
     {
-        $chain = new Channel;
+        $chain = new Channel();
 
         $cs = 0;
 
         $chain->recv()->then(function () use (&$cs) {
-            $cs ++;
+            $cs++;
         });
 
         $this->assertEquals('0|0|1', (string)$chain);
 
         $chain->recv()->then(function () use (&$cs) {
-            $cs ++;
+            $cs++;
         });
 
         $this->assertEquals('0|0|2', (string)$chain);
@@ -56,7 +56,7 @@ class ChannelTest extends TestCase
         $this->assertEquals(2, $cs);
 
         $chain->recv()->then(function () use (&$cs) {
-            $cs ++;
+            $cs++;
         });
 
         $this->assertEquals('1|0|0', (string)$chain);
@@ -70,7 +70,7 @@ class ChannelTest extends TestCase
     {
         $chan = new Channel(1024);
 
-        for ($i = 0; $i < 2048; $i ++) {
+        for ($i = 0; $i < 2048; $i++) {
             $chan->send($i);
         }
 
@@ -78,9 +78,9 @@ class ChannelTest extends TestCase
 
         $r = 0;
 
-        for ($j = 0; $j < 2048 + 512; $j ++) {
+        for ($j = 0; $j < 2048 + 512; $j++) {
             $chan->recv()->then(function () use (&$r) {
-                $r ++;
+                $r++;
             });
         }
 
@@ -88,7 +88,7 @@ class ChannelTest extends TestCase
 
         $this->assertEquals('0|0|512', (string)$chan);
 
-        for ($k = 0; $k < 512; $k ++) {
+        for ($k = 0; $k < 512; $k++) {
             $chan->send($k);
         }
 
@@ -99,13 +99,13 @@ class ChannelTest extends TestCase
 
     public function testSR3()
     {
-        $chan = new Channel;
+        $chan = new Channel();
 
         $r = 0;
 
-        for ($i = 0; $i < 1024; $i ++) {
+        for ($i = 0; $i < 1024; $i++) {
             $chan->recv()->then(function () use (&$r) {
-                $r ++;
+                $r++;
             });
         }
 
@@ -113,7 +113,7 @@ class ChannelTest extends TestCase
 
         $this->assertEquals('0|0|1024', (string)$chan);
 
-        for ($j = 0; $j < 512; $j ++) {
+        for ($j = 0; $j < 512; $j++) {
             $chan->send($j);
         }
 
@@ -121,7 +121,7 @@ class ChannelTest extends TestCase
 
         $this->assertEquals('0|0|512', (string)$chan);
 
-        for ($k = 0; $k < 512; $k ++) {
+        for ($k = 0; $k < 512; $k++) {
             $chan->send($k);
         }
 

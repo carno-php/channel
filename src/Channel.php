@@ -53,9 +53,9 @@ class Channel implements Chan
     public function __construct(int $cap = 1)
     {
         $this->cap = $cap;
-        $this->qData = new SplQueue;
-        $this->qSend = new SplQueue;
-        $this->qRecv = new SplQueue;
+        $this->qData = new SplQueue();
+        $this->qSend = new SplQueue();
+        $this->qRecv = new SplQueue();
     }
 
     /**
@@ -74,7 +74,7 @@ class Channel implements Chan
     public function send($data = null, Context $ctx = null) : Promised
     {
         if ($this->closing) {
-            throw new ChannelClosingException;
+            throw new ChannelClosingException();
         }
 
         /**
@@ -104,7 +104,7 @@ class Channel implements Chan
     public function recv() : Promised
     {
         if ($this->closing) {
-            throw new ChannelClosingException;
+            throw new ChannelClosingException();
         }
 
         /**
@@ -143,12 +143,12 @@ class Channel implements Chan
 
         while ($this->qSend->count() > 0) {
             $send = $this->qSend->dequeue();
-            $send->throw(new ChannelClosingException);
+            $send->throw(new ChannelClosingException());
         }
 
         while ($this->qRecv->count() > 0) {
             $recv = $this->qRecv->dequeue();
-            $recv->throw(new ChannelClosingException);
+            $recv->throw(new ChannelClosingException());
         }
 
         $this->closed()->resolve();

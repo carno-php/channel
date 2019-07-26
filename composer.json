@@ -2,7 +2,6 @@
   "name": "carno-php/channel",
   "license": "MIT",
   "require": {
-    "php": "^7.2",
     "carno-php/coroutine": "^1.0",
     "carno-php/promise": "^1.0"
   },

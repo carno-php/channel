@@ -26,7 +26,7 @@ class WorkerTest extends TestCase
             $sum += $got;
         });
 
-        for ($i = 1; $i <= 100; $i ++) {
+        for ($i = 1; $i <= 100; $i++) {
             $chan->send($i);
         }
 
@@ -46,7 +46,7 @@ class WorkerTest extends TestCase
             throw new Exception('test1');
         });
 
-        for ($i = 0; $i < 100; $i ++) {
+        for ($i = 0; $i < 100; $i++) {
             $chan->send($i);
         }
 
@@ -55,7 +55,7 @@ class WorkerTest extends TestCase
 
     public function testFailure()
     {
-        $chan = new Channel;
+        $chan = new Channel();
 
         $em = null;
         new Worker($chan, function (string $em) {

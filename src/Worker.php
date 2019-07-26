@@ -68,7 +68,7 @@ class Worker
         $this->failure = $failure;
 
         $this->processor = function ($data, Context $ctx = null) {
-            async($this->program, $ctx ?? new Context, $data)->then($this->done, $this->done);
+            async($this->program, $ctx ?? new Context(), $data)->then($this->done, $this->done);
         };
 
         $this->done = function ($e = null) {
